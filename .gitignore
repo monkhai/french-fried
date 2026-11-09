@@ -32,8 +32,14 @@ xcuserdata/
 /Review/
 /Design/
 /Prototype/
-# Voice recordings are local until redistribution rights are confirmed
-/Production/App/Sources/VoiceCues/*.mp3
 
 # Supabase CLI local metadata
 .temp/
+
+# Release tooling, credentials, and artifacts
+.tools/
+.asc/
+.vercel/
+release/local/
+release/output/
+goldie/out/

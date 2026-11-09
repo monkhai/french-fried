@@ -57,6 +57,8 @@ struct WelcomeView: View {
                         Label("Your routes stay private", systemImage: "lock.fill")
                             .font(.footnote).foregroundStyle(ink.opacity(0.6))
                     }
+                    Link("Privacy policy", destination: URL(string: "https://frenchfried.monkhai.dev/privacy")!)
+                        .font(.caption).foregroundStyle(ink.opacity(0.7))
                 }
             }
             .padding(.horizontal, 26).padding(.vertical, compact ? 12 : 22)

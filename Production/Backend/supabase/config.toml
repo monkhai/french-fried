@@ -1,0 +1,4 @@
+[functions.delete-account]
+# The handler verifies the bearer session against Auth's /user endpoint.
+# Required for compatibility with asymmetric Supabase session signing keys.
+verify_jwt = false

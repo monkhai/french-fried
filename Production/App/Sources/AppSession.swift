@@ -21,6 +21,7 @@ final class AppSession {
     var displayName = ""
     var signingIn = false
     var profileLoading = false
+    var accountDeleted = false
     private var userID: UUID?
     var recoveryOwnerID: UUID? { userID }
     private var pendingOnboardingKey: String? { userID.map { "onboarding.pending.\($0.uuidString)" } }
@@ -123,6 +124,21 @@ final class AppSession {
         catch { self.error = "Couldn't sign out. Please try again." }
     }
 
+    func deleteAccount() async throws {
+        let owner = try await client.auth.session.user.id
+        let result: AccountDeletionResult = try await client.functions.invoke("delete-account",
+            options: .init(body: ["confirmation": "DELETE"]))
+        guard result.deleted else { throw AccountDeletionError.failed }
+        RunRecoveryStore.clearAll(owner: owner)
+        UserDefaults.standard.removeObject(forKey: "onboarding.pending.\(owner.uuidString)")
+        // Supabase removes its persisted local session before making the sign-out
+        // request; the server has already revoked all sessions and deleted the user.
+        try? await client.auth.signOut(scope: .local)
+        signedIn = false; error = nil; needsOnboarding = false
+        profileLoadFailed = false; suggestedName = ""; displayName = ""; userID = nil
+        accountDeleted = true
+    }
+
     func save(_ run: RecordedRun, id: UUID, trainingSession: TrainingSession? = nil, sessionCompleted: Bool = false) async throws {
         let prescribedSession = trainingSession.flatMap { selected in
             CouchTo5KPlan.program.sessions.first { $0 == selected }
@@ -139,6 +155,8 @@ final class AppSession {
 }
 
 private struct ProfileIdentity: Decodable { let id: UUID; let display_name: String }
+private struct AccountDeletionResult: Decodable { let deleted: Bool }
+private enum AccountDeletionError: Error { case failed }
 private enum ProfileError: LocalizedError {
     case invalidName
     var errorDescription: String? { "Enter a name between 1 and 80 characters." }
@@ -178,5 +196,25 @@ struct RootView: View {
             else if session.signedIn { AppTabs().environment(session) }
             else { WelcomeView(session: session) }
         }.task { await session.restore() }
+        .onReceive(NotificationCenter.default.publisher(for: ASAuthorizationAppleIDProvider.credentialRevokedNotification)) { _ in
+            Task { await session.signOut() }
+        }
+        .sheet(isPresented: $session.accountDeleted) {
+            NavigationStack {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
+                        Label("Your account is deleted", systemImage: "checkmark.circle.fill")
+                            .font(.title2.bold())
+                        Text("Your French Fried profile, saved runs, routes, progress, and crew membership have been removed.")
+                        Text("One last step with Apple")
+                            .font(.headline)
+                        Text("To disconnect French Fried from your Apple Account, open Settings → your name → Sign in with Apple → French Fried, then choose Delete. This removes Apple's sign-in connection; your French Fried data has already been deleted.")
+                        Link("Apple's step-by-step instructions", destination: URL(string: "https://support.apple.com/en-us/102571")!)
+                        Button("Done") { session.accountDeleted = false }
+                            .buttonStyle(.borderedProminent)
+                    }.padding(24)
+                }.navigationTitle("Account deleted")
+            }
+        }
     }
 }

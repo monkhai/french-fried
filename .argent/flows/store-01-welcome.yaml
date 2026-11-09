@@ -1,0 +1,6 @@
+steps:
+  - launch: local.frenchfried.app
+  - echo: Allow session restoration and the welcome animation to finish on a clean install.
+  - wait: 5000
+  - await:
+      idle: true

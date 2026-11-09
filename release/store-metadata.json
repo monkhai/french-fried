@@ -1,0 +1,22 @@
+{
+  "status": "draft",
+  "locale": "en-US",
+  "name": "French Fried",
+  "subtitle": "From couch to running crew",
+  "primaryCategory": "HEALTH_AND_FITNESS",
+  "promotionalText": "One run at a time, spud. Build a running habit with a nine-week program, free runs, and a crew to cheer you on.",
+  "description": "From couch potato to hot potato. French Fried helps you build a running habit, one session at a time.\n\nFOLLOW A PLAN\nWork through 27 sessions over nine weeks, with warm-ups, run/walk intervals, and cool-downs. Repeat sessions whenever you need to. The program builds toward 30 minutes of continuous running; it does not guarantee a five-kilometre distance.\n\nRUN YOUR WAY\nStart a free run to track your time, distance, and route without prescribed intervals. Save your runs and revisit your progress.\n\nBRING YOUR CREW\nCreate a running group, invite friends, and see each other's run summaries. Route coordinates stay private to the runner.\n\nKEEP MOVING\nLive Activities let you follow your session from the Lock Screen and Dynamic Island.\n\nSign in with Apple is required. Location access enables route and distance tracking. Take rest days between sessions and consult a healthcare professional if you have concerns about starting exercise.\n\nOptional voice guidance includes strong language and is off by default.",
+  "keywords": "5k,intervals,walk,jog,training,fitness,run tracker,beginner,exercise,cardio",
+  "supportURL": "https://frenchfried.monkhai.dev/support",
+  "privacyPolicyURL": "https://frenchfried.monkhai.dev/privacy",
+  "reviewNotes": "Sign in with Apple is the only sign-in method; reviewers can use their own Apple Account to create a fresh account. No subscription or payment is required. Location permission is used only for run tracking. Settings \u2192 Account \u2192 Delete account removes live account data and shows how to disconnect Sign in with Apple (Apple TN3194, no Apple refresh/access token is retained by this native ID-token integration). Crews share summaries, never precise routes.",
+  "unresolved": [
+    "App privacy certification awaiting approval",
+    "Uploaded build processing and attachment",
+    "Apple agreement status",
+    "Real Apple sign-in and physical-device running verification",
+    "Store screenshots"
+  ],
+  "appID": "6832700678",
+  "marketingURL": "https://frenchfried.monkhai.dev"
+}

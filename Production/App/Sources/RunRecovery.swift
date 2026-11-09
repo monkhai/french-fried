@@ -36,4 +36,8 @@ enum RunRecoveryStore {
               let recovery = try? JSONDecoder().decode(RunRecovery.self, from: data), recovery.id == id else { return }
         try? FileManager.default.removeItem(at: file)
     }
+
+    static func clearAll(owner: UUID) {
+        try? FileManager.default.removeItem(at: file(owner: owner))
+    }
 }

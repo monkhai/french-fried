@@ -16,7 +16,7 @@ struct RunCueSettingsView: View {
                 Toggle("Haptic cues", isOn: $hapticsEnabled)
             } header: { Text("Guided runs") }
             footer: {
-                Text("Hear Ms. Harris during your runs, including when your phone is locked. Haptics work while the app is open. Both are off by default.")
+                Text("Hear Ms. Harris during your runs, including when your phone is locked. Voice cues include strong language. Haptics work while the app is open. Both are off by default.")
             }
         }.navigationTitle("Run guidance")
     }

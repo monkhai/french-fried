@@ -38,6 +38,12 @@ The program builds toward **30 minutes of continuous running**, not a guaranteed
 
 You'll need **Xcode with the iOS 26 SDK or newer**, **XcodeGen**, your own **Supabase project**, and an **Apple development team** for signing and Sign in with Apple.
 
+### Just here to run with a friend?
+
+The public App Store release is being prepared. Once it is approved, install it on an **iPhone with iOS 26+**, sign in with your own **Apple Account**, and join your friend's crew with their invite code. The app connects to the hosted backend automatically. You need neither a developer account nor any secret keys.
+
+[App website](https://frenchfried.monkhai.dev) · [Support](https://frenchfried.monkhai.dev/support) · [Privacy](https://frenchfried.monkhai.dev/privacy)
+
 ### 1. Set the table
 
 ```sh
@@ -52,6 +58,7 @@ Fill in `Production/App/Local.xcconfig` with your project URL, **publishable** c
 
 - Set your own bundle identifiers in [`Production/App/project.yml`](Production/App/project.yml) and configure Sign in with Apple for them.
 - Apply the [SQL migrations](Production/Backend/supabase/migrations) to your Supabase project in filename order.
+- Deploy the `delete-account` Edge Function from that directory. It authenticates the caller through Supabase Auth before deleting only their account; keep its service-role key on the server. See the backend notes for configuration.
 - Follow the [backend notes](Production/Backend/README.md) for authentication, access controls, and known limitations.
 
 ### 3. Turn up the heat
@@ -64,7 +71,7 @@ open FrenchFried.xcodeproj
 
 Select your signing team and a device or simulator in Xcode, then build and run.
 
-**A note on voice:** the [cue scripts](Production/Voice/zoe-cues.json) are included; generated recordings are kept out of this repository pending confirmation of redistribution rights. Without those files, voice cues are silent. The rest of the app remains available.
+**A note on voice:** the [cue scripts](Production/Voice/zoe-cues.json) and recordings are included with confirmed redistribution permission. Optional voice cues include strong language and start off by default.
 
 ## Ingredients
 
@@ -106,3 +113,34 @@ node --test Experiments/neon-auth-spike/handler.test.mjs
 **Ready when you are, spud.** 🥔
 
 </div>
+
+## App Store release tooling
+
+The release workflow uses [ASC](https://github.com/rorkai/App-Store-Connect-CLI) for App Store Connect and [Goldie](https://github.com/software-mansion-labs/goldie) for screenshots. Local setup currently uses ASC 6.6.0 and Goldie 0.5.0.
+
+```sh
+# Build a signed device archive using the ignored Local.xcconfig.
+BUILD_NUMBER=4 scripts/archive-app.sh
+
+# Export for the App Store. Supply your own team ID.
+APPLE_TEAM_ID=YOURTEAMID scripts/export-app.sh 4
+
+# Authenticate ASC locally first; never commit its API private key.
+# Upload only after completing release readiness checks.
+ASC_APP_ID=YOUR_APP_ID scripts/upload-app.sh release/output/app-store-4/FrenchFried.ipa
+```
+
+`upload-app.sh` expects ASC at `.tools/asc`, or an executable path in `ASC_BIN`. It uploads and waits for processing; it does not submit for review or release the app. Archives, IPAs, CLI authentication, and local release files are ignored by Git.
+
+Store copy is drafted in [`release/store-metadata.json`](release/store-metadata.json). Its unresolved fields are real release blockers, not completed declarations. The live support/privacy pages, account deletion, reviewer contact, age rating, and listing metadata are configured. Real Apple sign-in and on-device running still need release verification. The native ID-token flow does not retain Apple refresh/access tokens; after deleting account data, the app follows Apple TN3194 by showing manual Sign in with Apple revocation instructions.
+
+Goldie's configuration is in [`goldie/goldie.config.ts`](goldie/goldie.config.ts). Build a Release simulator app into `release/output/simulator`, then run:
+
+```sh
+GOLDIE_CONFIG="$PWD/goldie/goldie.config.ts" npx -y goldie@0.5.0 doctor
+GOLDIE_CONFIG="$PWD/goldie/goldie.config.ts" npx -y goldie@0.5.0 capture
+GOLDIE_CONFIG="$PWD/goldie/goldie.config.ts" npx -y goldie@0.5.0 frame
+GOLDIE_CONFIG="$PWD/goldie/goldie.config.ts" npx -y goldie@0.5.0 verify
+```
+
+The initial flow captures the production welcome screen. Authenticated screenshots must use a dedicated test account and avoid personal routes and invite codes. The full store screenshot set is still in progress.

@@ -1,15 +1,11 @@
 # Backend foundation
 
-The migrations are deployed to the isolated French Fried Development Supabase project. The visual prototype is separate. The iOS integration and live Apple sign-in still require verification.
+The iOS app uses Supabase for native Apple ID-token sign-in, account profiles, private run storage, and invite-only group summaries. The existing French Fried project hosts the shared service; each runner signs in with their own Apple Account. Source builds use the project configured in the ignored `Production/App/Local.xcconfig`.
 
-## Provider decision
+The Neon spike is historical research and is not used by the production app. A public client receives only the project URL and publishable key. Service-role keys and database credentials stay server-side. RLS and checked RPCs enforce access; hiding the client key is not an access-control boundary.
 
-LYR-40 evaluates Neon; a live native iOS Apple sign-in path for Neon managed auth is still unverified. Supabase documents native Swift Apple ID-token exchange directly, so this is a practical alternate implementation candidate, not proof that the Neon spike has passed or that a live backend has been selected. No provider has been provisioned here.
-
-- [Supabase: Swift native ID-token sign-in](https://supabase.com/docs/reference/swift/auth-signinwithidtoken)
-- [Supabase: Sign in with Apple](https://supabase.com/docs/guides/auth/social-sign-in/auth-apple)
-- [Supabase: Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)
-- [Neon spike](../../Experiments/neon-auth-spike/README.md)
+- [Supabase native Apple sign-in](https://supabase.com/docs/guides/auth/social-sign-in/auth-apple)
+- [Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)
 
 ## Data contract
 
@@ -53,3 +49,13 @@ On 2026-11-01, all four migrations were applied to the dedicated development pro
 The security advisor reports the seven public security-definer group RPCs because signed-in users can invoke them. That access is intentional: each checks identity or membership, and the group suite covers cross-user denial. They remain privileged code requiring continued review. The `group_invites` RLS-without-policy notice is intentional: direct access is denied, with token access through the member-checked RPC. The performance advisor flags the composite route foreign key, but `run_id` is already the primary key, limiting the lookup to one row. Unused-index notices on an empty development database do not establish that indexes should be removed.
 
 On 2026-11-01, the fifth migration (`authoritative_program_progress`) was applied to the dedicated development project. `tests/program_progress.sql` passed through the connector with rolled-back fixtures: early runs, repeated sessions, out-of-order weeks, contiguous progress, graduation, idempotent retry, protected fields, failed-route atomicity, deletion recomputation, and cross-user isolation. Simultaneous independent transactions have not been stress-tested. Security advisor reported no new progression findings; existing group RPC and intentionally denied invite notices remain. The Apple-only project also reports disabled leaked-password protection, which is unrelated to Apple ID-token authentication.
+
+## Account deletion
+
+The `delete-account` Edge Function is deployed to the shared project. It accepts only `POST` with a user's bearer session and `{"confirmation":"DELETE"}`. It validates the caller through `/auth/v1/user`, revokes all refresh sessions, and deletes that exact Auth user through the server-only admin API. It rejects client-supplied IDs. Foreign keys remove the profile, runs, routes, milestones, and memberships; the cleanup trigger removes groups with no members. A failure is returned without exposing upstream credentials or error bodies.
+
+Set `verify_jwt = false` for this function because the handler performs its own server-verified Auth check, compatible with current Supabase signing keys. The Supabase-provided `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` remain in the function environment, never in the iOS app. The function uses platform `fetch` and has no third-party runtime dependencies.
+
+The native Apple integration exchanges an ID token and nonce with Supabase and does not obtain/store Apple's refresh or access tokens. Following [Apple TN3194](https://developer.apple.com/documentation/technotes/tn3194-handling-account-deletions-and-revoking-tokens-for-sign-in-with-apple), deletion removes account data immediately, clears the device's saved session and unfinished run, and directs the user to manually revoke Apple access. The app also signs out when Apple delivers a credential-revoked notification.
+
+On 2026-11-09, six handler tests passed (`bun test Production/Backend/tests/delete-account.test.ts`), the deployed endpoint rejected an unauthenticated request with HTTP 401, and `tests/account_deletion.sql` passed using rolled-back disposable fixtures against the shared project. It checks deletion cascades, empty-group cleanup, and denial of profile/group recreation with a deleted user's claims. These checks do not replace real-device authentication and deletion testing.

@@ -8,6 +8,9 @@ struct AccountSettingsView: View {
     @State private var saving = false
     @State private var signingOut = false
     @State private var confirmSignOut = false
+    @State private var confirmDeletion = false
+    @State private var deleting = false
+    @State private var deletionError: String?
     @State private var message: String?
     @State private var saveFailed = false
     private var trimmedName: String { name.trimmingCharacters(in: .whitespacesAndNewlines) }
@@ -40,14 +43,20 @@ struct AccountSettingsView: View {
 
                 Section("About") {
                     LabeledContent("French Fried", value: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")
+                    Link("Help & support", destination: URL(string: "https://frenchfried.monkhai.dev/support")!)
+                    Link("Privacy policy", destination: URL(string: "https://frenchfried.monkhai.dev/privacy")!)
                     Button("Show onboarding") { session.replayOnboarding() }
                 }
                 Section("Account") {
                     Button(signingOut ? "Signing out…" : "Sign out", role: .destructive) { confirmSignOut = true }
                         .disabled(signingOut || saving)
+                    Button(deleting ? "Deleting account…" : "Delete account", role: .destructive) { confirmDeletion = true }
+                        .disabled(deleting || signingOut || saving)
+                    if let deletionError { Text(deletionError).font(.footnote).foregroundStyle(.red) }
                     if let error = session.error { Text(error).font(.footnote).foregroundStyle(.red) }
                 }
             }
+            .disabled(deleting)
             .scrollContentBackground(.hidden)
             .background(Color(red: 0.98, green: 0.96, blue: 0.92))
             .navigationTitle("Settings")
@@ -57,6 +66,18 @@ struct AccountSettingsView: View {
                     Task { signingOut = true; await session.signOut(); signingOut = false }
                 }
             } message: { Text("Your saved runs and crew will be here when you sign back in.") }
+            .confirmationDialog("Permanently delete your account?", isPresented: $confirmDeletion, titleVisibility: .visible) {
+                Button("Delete account and all my data", role: .destructive) {
+                    Task {
+                        deleting = true; deletionError = nil
+                        defer { deleting = false }
+                        do { try await session.deleteAccount() }
+                        catch { deletionError = "Deletion couldn't be confirmed. Check your connection and try again. If your session expired, sign in again first." }
+                    }
+                }
+            } message: {
+                Text("Your profile, saved runs, routes, progress, and crew membership will be permanently removed. This cannot be undone. Afterwards, we'll show you how to disconnect Sign in with Apple.")
+            }
         }
     }
 
