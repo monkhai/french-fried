@@ -1,5 +1,5 @@
 {
-  "status": "draft",
+  "status": "submission-blocked",
   "locale": "en-US",
   "name": "French Fried",
   "subtitle": "From couch to running crew",
@@ -11,10 +11,11 @@
   "privacyPolicyURL": "https://frenchfried.monkhai.dev/privacy",
   "reviewNotes": "Sign in with Apple is the only sign-in method; reviewers can use their own Apple Account to create a fresh account. No subscription or payment is required. Location permission is used only for run tracking. Settings \u2192 Account \u2192 Delete account removes live account data and shows how to disconnect Sign in with Apple (Apple TN3194, no Apple refresh/access token is retained by this native ID-token integration). Crews share summaries, never precise routes.",
   "unresolved": [
-    "Real Apple sign-in and physical-device running verification",
-    "Build 5 upload and App Review submission"
+    "Apple regulated medical device declaration: requires authenticated ASC web session",
+    "Fresh Apple sign-in and physical-device running verification remain incomplete"
   ],
   "appID": "6832700678",
   "marketingURL": "https://frenchfried.monkhai.dev",
-  "appearance": "Light appearance enforced"
+  "appearance": "Light appearance enforced",
+  "buildNumber": "5"
 }
