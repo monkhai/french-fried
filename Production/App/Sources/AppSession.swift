@@ -4,6 +4,7 @@ import AppleSignIn
 import Supabase
 import RunTracking
 import ProgramCore
+import OSLog
 
 @MainActor @Observable
 final class AppSession {
@@ -98,6 +99,11 @@ final class AppSession {
 
     func complete(_ result: Result<ASAuthorization, Error>) async {
         guard !requestFailed, !signingIn else { return }
+        if case .failure(let failure) = result {
+            let failure = failure as NSError
+            Logger(subsystem: "local.frenchfried.app", category: "Authentication")
+                .error("Apple authorization failed: domain=\(failure.domain, privacy: .public) code=\(failure.code)")
+        }
         signingIn = true
         defer { signingIn = false }
         do {

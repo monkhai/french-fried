@@ -32,6 +32,7 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundleDisplayName: French Fried
+        UIUserInterfaceStyle: Light
         NSLocationWhenInUseUsageDescription: French Fried uses your location to track your running route and distance.
         UIBackgroundModes: [location, audio]
         NSSupportsLiveActivities: true

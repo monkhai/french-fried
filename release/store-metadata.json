@@ -11,12 +11,10 @@
   "privacyPolicyURL": "https://frenchfried.monkhai.dev/privacy",
   "reviewNotes": "Sign in with Apple is the only sign-in method; reviewers can use their own Apple Account to create a fresh account. No subscription or payment is required. Location permission is used only for run tracking. Settings \u2192 Account \u2192 Delete account removes live account data and shows how to disconnect Sign in with Apple (Apple TN3194, no Apple refresh/access token is retained by this native ID-token integration). Crews share summaries, never precise routes.",
   "unresolved": [
-    "App privacy certification awaiting approval",
-    "Uploaded build processing and attachment",
-    "Apple agreement status",
     "Real Apple sign-in and physical-device running verification",
-    "Store screenshots"
+    "Build 5 upload and App Review submission"
   ],
   "appID": "6832700678",
-  "marketingURL": "https://frenchfried.monkhai.dev"
+  "marketingURL": "https://frenchfried.monkhai.dev",
+  "appearance": "Light appearance enforced"
 }

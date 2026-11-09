@@ -3,6 +3,6 @@ import SwiftUI
 @main
 struct FrenchFriedApp: App {
     var body: some Scene {
-        WindowGroup { RootView() }
+        WindowGroup { RootView().preferredColorScheme(.light) }
     }
 }

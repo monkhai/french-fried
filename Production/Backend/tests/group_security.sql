@@ -16,7 +16,7 @@ select public.save_run(now() - interval '8 days 1 hour', now() - interval '8 day
 select set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-000000000101', true);
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-000000000101","role":"authenticated"}', true);
 insert into public.profiles(id, display_name) values ('00000000-0000-4000-8000-000000000101', 'A');
-select public.save_run(now(), now(), 10, 100, 'example', 1, 'w1-r1', false, '[{"latitude":3,"longitude":4}]') from generate_series(1, 4);
+select public.save_run(now() - interval '10 seconds', now(), 10, 100, 'example', 1, 'w1-r1', false, '[{"latitude":3,"longitude":4}]') from generate_series(1, 4);
 select set_config('test.group_id', public.create_group('Couch Escapees')::text, true);
 select set_config('test.invite', public.get_group_invite(current_setting('test.group_id')::uuid)::text, true);
 do $$ begin

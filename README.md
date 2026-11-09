@@ -120,14 +120,14 @@ The release workflow uses [ASC](https://github.com/rorkai/App-Store-Connect-CLI)
 
 ```sh
 # Build a signed device archive using the ignored Local.xcconfig.
-BUILD_NUMBER=4 scripts/archive-app.sh
+BUILD_NUMBER=5 scripts/archive-app.sh
 
 # Export for the App Store. Supply your own team ID.
-APPLE_TEAM_ID=YOURTEAMID scripts/export-app.sh 4
+APPLE_TEAM_ID=YOURTEAMID scripts/export-app.sh 5
 
 # Authenticate ASC locally first; never commit its API private key.
 # Upload only after completing release readiness checks.
-ASC_APP_ID=YOUR_APP_ID scripts/upload-app.sh release/output/app-store-4/FrenchFried.ipa
+ASC_APP_ID=YOUR_APP_ID scripts/upload-app.sh release/output/app-store-5/FrenchFried.ipa
 ```
 
 `upload-app.sh` expects ASC at `.tools/asc`, or an executable path in `ASC_BIN`. It uploads and waits for processing; it does not submit for review or release the app. Archives, IPAs, CLI authentication, and local release files are ignored by Git.
@@ -143,4 +143,4 @@ GOLDIE_CONFIG="$PWD/goldie/goldie.config.ts" npx -y goldie@0.5.0 frame
 GOLDIE_CONFIG="$PWD/goldie/goldie.config.ts" npx -y goldie@0.5.0 verify
 ```
 
-The initial flow captures the production welcome screen. Authenticated screenshots must use a dedicated test account and avoid personal routes and invite codes. The full store screenshot set is still in progress.
+The initial flow captures the production welcome screen. Authenticated screenshots must use a dedicated test account and avoid personal routes and invite codes. The welcome screenshot has completed App Store Connect processing. The app uses light appearance consistently, including when the device is in dark mode.
