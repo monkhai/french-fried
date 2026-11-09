@@ -1,0 +1,17 @@
+{
+  "model": "eleven_v4",
+  "voice": "Zoe - Charismatic, Gritty and Engaging",
+  "selection": "round-robin independently per event",
+  "events": {
+    "warm_up": ["[encouraging] Walk it out, spud.", "[playfully] Wake up, potato.", "[mischievously] Let's loosen those fries.", "[playfully] Up you get, couch goblin."],
+    "run": ["[excited] Run, potato, run!", "[excited] Move them fries!", "[playfully] Pick it up, buttercup.", "[mischievously] Faster, you starchy bitch."],
+    "walk": ["[playfully] Walk, drama queen.", "[warmly] Catch your breath, spud.", "[playfully] Slow it down, hot potato.", "[encouraging] Walk it off, superstar."],
+    "cool_down": ["[playfully] Cool those fries.", "[warmly] Easy now, hot potato.", "[encouraging] Walk it home, baby.", "[playfully] Bring that starch down."],
+    "session_complete": ["[excited] Done! You crispy legend.", "[playfully] Look at you, athlete-ish.", "[excited] We did it, you sexy potato.", "[excited] Finished! Go brag about it."],
+    "pause": ["[sarcastic] A break? Convenient.", "[sarcastic] Pausing? Bold choice.", "[playfully] Fine. Rest, you diva.", "[playfully] Take your time, Your Majesty."],
+    "resume": ["[playfully] Break's over, babe.", "[encouraging] Up we go, spud.", "[playfully] Back to it, drama queen.", "[mischievously] Let's unpause that ass."],
+    "free_run_start": ["[playfully] No plan. Just vibes.", "[encouraging] Go forth, little fry.", "[excited] Run wild, potato child.", "[mischievously] Let's cause some cardio."],
+    "run_saved": ["[excited] Saved, you sweaty legend.", "[warmly] In the books, baby.", "[playfully] Receipts secured.", "[playfully] Look at that. Evidence."],
+    "week_completed": ["[excited] New week, new fry!", "[excited] You leveled up, spud!", "[playfully] Look who's getting crispy.", "[excited] That's one hot potato."]
+  }
+}

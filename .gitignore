@@ -1,0 +1,39 @@
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+Local.xcconfig
+*.local.*
+*.pem
+*.key
+*.p8
+*.p12
+*.pfx
+*.mobileprovision
+ExportOptions*.plist
+.aws/
+.codex/
+.agents/
+# Generated builds and user state
+.DS_Store
+.build/
+.swiftpm/
+DerivedData/
+build/
+node_modules/
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+*.xcuserstate
+*.ipa
+*.xcarchive/
+*.log
+# Internal design and review material, retained locally
+/Review/
+/Design/
+/Prototype/
+# Voice recordings are local until redistribution rights are confirmed
+/Production/App/Sources/VoiceCues/*.mp3
+
+# Supabase CLI local metadata
+.temp/

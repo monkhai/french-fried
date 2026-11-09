@@ -1,0 +1,68 @@
+name: FrenchFried
+options:
+  bundleIdPrefix: local.frenchfried
+configFiles:
+  Debug: Config.xcconfig
+  Release: Config.xcconfig
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: '26.0'
+packages:
+  ProgramCore:
+    path: ../ProgramCore
+  RunTracking:
+    path: ../RunTracking
+  AppleSignIn:
+    path: ../AppleSignIn
+  Supabase:
+    url: https://github.com/supabase/supabase-swift.git
+    exactVersion: 2.55.6
+targets:
+  FrenchFried:
+    type: application
+    platform: iOS
+    sources: [Sources, Shared]
+    info:
+      path: Info.plist
+      properties:
+        SUPABASE_URL: $(SUPABASE_URL)
+        SUPABASE_PUBLISHABLE_KEY: $(SUPABASE_PUBLISHABLE_KEY)
+        CFBundleDisplayName: French Fried
+        NSLocationWhenInUseUsageDescription: French Fried uses your location to track your running route and distance.
+        UIBackgroundModes: [location, audio]
+        NSSupportsLiveActivities: true
+        UILaunchScreen: {}
+    entitlements:
+      path: FrenchFried.entitlements
+      properties:
+        com.apple.developer.applesignin: [Default]
+    dependencies:
+      - package: ProgramCore
+      - package: RunTracking
+      - package: AppleSignIn
+      - package: Supabase
+        product: Supabase
+      - target: RunActivity
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: local.frenchfried.app
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: '1'
+        SWIFT_VERSION: '5.0'
+  RunActivity:
+    type: app-extension
+    platform: iOS
+    sources:
+      - RunActivity
+      - Shared
+    info:
+      path: RunActivity/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: local.frenchfried.app.runactivity
+        TARGETED_DEVICE_FAMILY: '1'
+        SWIFT_VERSION: '5.0'
+        SKIP_INSTALL: YES
