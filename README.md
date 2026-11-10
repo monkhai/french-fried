@@ -40,7 +40,7 @@ You'll need **Xcode with the iOS 26 SDK or newer**, **XcodeGen**, your own **Sup
 
 ### Just here to run with a friend?
 
-The public App Store release is being prepared. Once it is approved, install it on an **iPhone with iOS 26+**, sign in with your own **Apple Account**, and join your friend's crew with their invite code. The app connects to the hosted backend automatically. You need neither a developer account nor any secret keys.
+Version 1.0 (build 5) was submitted to App Review on November 10, 2026. Once it is approved, install it on an **iPhone with iOS 26+**, sign in with your own **Apple Account**, and join your friend's crew with their invite code. The app connects to the hosted backend automatically. You need neither a developer account nor any secret keys.
 
 [App website](https://frenchfried.monkhai.dev) · [Support](https://frenchfried.monkhai.dev/support) · [Privacy](https://frenchfried.monkhai.dev/privacy)
 
@@ -132,7 +132,7 @@ ASC_APP_ID=YOUR_APP_ID scripts/upload-app.sh release/output/app-store-5/FrenchFr
 
 `upload-app.sh` expects ASC at `.tools/asc`, or an executable path in `ASC_BIN`. It uploads and waits for processing; it does not submit for review or release the app. Archives, IPAs, CLI authentication, and local release files are ignored by Git.
 
-Store copy is drafted in [`release/store-metadata.json`](release/store-metadata.json). Its unresolved fields are real release blockers, not completed declarations. The live support/privacy pages, account deletion, reviewer contact, age rating, and listing metadata are configured. Real Apple sign-in and on-device running still need release verification. The native ID-token flow does not retain Apple refresh/access tokens; after deleting account data, the app follows Apple TN3194 by showing manual Sign in with Apple revocation instructions.
+Store copy is drafted in [`release/store-metadata.json`](release/store-metadata.json). Its unresolved fields document remaining verification limitations. The live support/privacy pages, account deletion, reviewer contact, age rating, medical-device declaration, and listing metadata are configured. Build 5 has been submitted for App Review. Real Apple sign-in and on-device running still need release verification. The native ID-token flow does not retain Apple refresh/access tokens; after deleting account data, the app follows Apple TN3194 by showing manual Sign in with Apple revocation instructions.
 
 Goldie's configuration is in [`goldie/goldie.config.ts`](goldie/goldie.config.ts). Build a Release simulator app into `release/output/simulator`, then run:
 
